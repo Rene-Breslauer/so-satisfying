@@ -1,0 +1,133 @@
+<style>
+  #shopify-section-{{ section.id }} {
+    {%- assign button_background = settings.primary_button_background -%}
+    {%- assign button_text_color = settings.primary_button_text_color -%}
+
+    --primary-button-text-color: {{ button_text_color.red }}, {{ button_text_color.green }}, {{ button_text_color.blue }};
+    --primary-button-background: {{ button_background.red }}, {{ button_background.green }}, {{ button_background.blue }};
+  }
+
+  .not-found-page {
+    position: relative;
+    padding-top: 47px;
+    padding-bottom: 176px;
+    max-width: 1230px;
+    margin: auto;
+    margin-bottom: 72px;
+    background-color: #FBF6FF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .not-found-page .image-container {
+    width: 40%;
+  }
+
+  .not-found-page h1 {
+    font-size: 40px;
+    line-height: 0.9;
+    font-weight: 700;
+    max-width: 940px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .not-found-page span {
+    max-width: 500px;
+    text-align: center;
+    white-space: break-spaces;
+  }
+
+  .not-found-page .button-container {
+    display: flex;
+  }
+
+  .not-found-page .button-container .button {
+    width: 276px;
+    border-radius: 0;
+  }
+
+  .not-found-page .button-container .button + .button {
+    margin-top: 20px;
+  }
+
+  .not-found-page .button-container {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .not-found-page .socket {
+    position: absolute;
+    left: -100px;
+    top: -10px;
+  }
+
+  .not-found-page .plug {
+    position: absolute;
+    bottom: -100px;
+    right: -80px;
+  }
+
+  .shopify-section--text-with-icons {
+    position: relative;
+    z-index: 1;
+  }
+
+  .not-found-page .plug, .not-found-page .socket {
+    display: none;
+  }
+
+  @media screen and (min-width: 1260px) {
+
+    .not-found-page .plug, .not-found-page .socket {
+      display: block;
+    }
+
+    .not-found-page h1 {
+      font-size: 70px;
+    }
+
+    .not-found-page .button-container {
+      flex-direction: row;
+    }
+
+    .not-found-page .button-container .button + .button {
+      margin-top: 0;
+      margin-left: 44px;
+    }
+  }
+</style>
+<section class="section--flush-bottom not-found-page">
+  <div class="image-container">
+    {% include 'not-found.svg' %}
+  </div>
+
+  <h1>{{ '404.general.title' | t }}</h1>
+
+  <span>{{ '404.general.description' | t }}</span>
+
+  <div class="button-container">
+    <a href="javascript:history.back()" class="button button--primary">{{ '404.general.back_to_prev' | t }}</a>
+    <a href="/" class="button button--primary">{{ '404.general.back_to_home' | t }}</a>
+  </div>
+
+  <div class="socket">
+    {% include 'socket.svg' %}
+  </div>
+
+  <div class="plug">
+    {% include 'plug.svg' %}
+  </div>
+  
+</section>
+
+{% schema %}
+{
+  "name": "404",
+  "class": "shopify-section--404"
+}
+{% endschema %}

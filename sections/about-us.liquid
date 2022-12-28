@@ -1,0 +1,228 @@
+<style>
+  .about-us-section {
+    position: relative;
+  }
+
+  .about-us-background {
+    background: {{ section.settings.backrgound_gradient }};
+    background-color: {{ section.settings.background_color }};
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  .about-us-background > svg {
+    height: inherit;
+    width: inherit;
+  }
+
+  .about-us-content-wrapper {
+    padding: 40px 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .about-us-subtitle, .about-us-title, .about-us-description {
+    color: {{ section.settings.text_color }};
+  }
+
+  .about-us-subtitle, .about-us-title {
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 15px;
+    line-height: 1.2;
+  }
+
+  .about-us-subtitle {
+    font-size: 14px;
+  }
+
+  .about-us-title {
+    font-size: 24px;
+  }
+
+  .about-us-description {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .about-us-text-content-wrapper .button {
+    margin-top: 30px;
+  }
+
+  .about-us-media-content-wrapper > iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  .about-us-text-content-wrapper > div {
+    margin-bottom: 45px;
+  }
+
+  .about-us-media-content-wrapper > .preview-image {
+    cursor: pointer;
+    object-fit: contain;
+    margin: auto;
+  }
+
+  @media screen and (min-width: 993px) {
+    .about-us-content-wrapper {
+      padding: 60px 130px 40px;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .about-us-title {
+      font-size: 36px;
+    }
+
+    .about-us-subtitle, .about-us-title {
+      margin-bottom: 20px;
+    }
+
+    .about-us-text-content-wrapper {
+      max-width: 40%;
+      display: flex;
+    }
+  
+    .about-us-media-content-wrapper {
+      max-width: 58.43%;
+      width: 100%;
+      display: flex;
+    }
+  
+    .about-us-text-content-wrapper > div {
+      max-width: 580px;
+      margin: auto auto auto 0;
+    }
+
+    .about-us-text-content-wrapper .button {
+      margin-top: 40px;
+    }
+  }
+</style>
+
+<section class="about-us-section">
+  <div class="about-us-background">
+    {% include 'about-us-background' %}
+  </div>
+  <div class="about-us-content-wrapper">
+    <div class="about-us-text-content-wrapper">
+      <div>
+        {% if section.settings.subtitle != blank %}
+          <div class="about-us-subtitle">{{ section.settings.subtitle }}</div>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <div class="about-us-title">{{ section.settings.title }}</div>
+        {% endif %}
+        {% if section.settings.description != blank %}
+          <div class="about-us-description">{{ section.settings.description }}</div>
+        {% endif %}
+        {% if section.settings.button_title != blank %}
+          <a class="button button--secondary" href="{{ section.settings.button_link }}">
+            {{- section.settings.button_title -}}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div x-data="{ showPoster: {% if section.settings.cover_image != blank %}true{% else %}false{% endif %}, height: 0 }" class="about-us-media-content-wrapper">
+      <template x-if="showPoster">
+       <img
+          class="preview-image"
+          x-on:click="showPoster = false"
+          x-ref="img"
+          x-init="height = $refs.img.height"
+          src="{{section.settings.cover_image | image_url}})"
+        />
+      </template>
+
+      <template x-if="!showPoster">
+        {%- if section.settings.video_url.type == 'youtube' -%}
+          <iframe :style="{ height: `${height}px` }" title="{{ section.settings.title | escape }}" src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?autoplay=1&playsinline=1&playlist={{ section.settings.video_url.id }}&enablejsapi=1&rel=0&modestbranding=1&origin={{ 'https://' | append: request.host | url_encode }}" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen"></iframe>
+        {%- elsif section.settings.video_url.type == 'vimeo' -%}
+          <iframe title="{{ section.settings.title | escape }}" src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}?autoplay=1&autopause=1&transparent=0&responsive=1&portrait=0&title=0&byline=0" allow="autoplay; encrypted-media;" allowfullscreen="allowfullscreen"></iframe>
+        {%- endif -%}
+      </template>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "About Us",
+  "settings": [
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "Video Link",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover image"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "about us"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "What is Lorem Ipsum?"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+    },
+    {
+      "type": "text",
+      "id": "button_title",
+      "label": "Button Title",
+      "default": "Our Story"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color_background",
+      "id": "backrgound_gradient",
+      "label": "Background Gradient",
+      "default": "linear-gradient(#ffffff, #000000)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us"
+    }
+  ]
+}
+{% endschema %}
